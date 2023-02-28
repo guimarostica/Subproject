@@ -105,8 +105,8 @@ class CreateMosaic(tk.Tk):
         self.update_text_position(0)
         
     def delete_box(self, event):
-        my_canvas.delete(id)
         tag = "tag"+str(id[0])
+        my_canvas.delete(id)
         del text_rotate[tag]
         
 
@@ -149,9 +149,9 @@ class CreateMosaic(tk.Tk):
             current_angle = 0.0
         next_ang = current_angle - ang
         # Atualizar a posição do texto
-        text_rotate[tag] = next_ang
         my_canvas.coords(tag, x_center, y_center)
         my_canvas.itemconfigure(tag, angle=current_angle-ang)
+        text_rotate[tag] = next_ang
 
     def left(self, event):
         x = - var_scale
@@ -234,7 +234,7 @@ class CreateMosaic(tk.Tk):
     def save_button_event(self):
         canva = Canva()
         canva.box_list()
-
+        
         pallet = Pallet()
         pallet.init(entry_pallet_x.get(), entry_pallet_y.get(), box_lista, text_rotate)
  
@@ -435,7 +435,9 @@ class BoxInfo:
 
 class Canva:
     def add_pallet(self,x,y):
+        global text_rotate
         self.pallet_button_event(x,y)
+        text_rotate = dict()
   
     def pallet_button_event(self,x,y):
         x = int((int(x)*600)/1200)
@@ -449,20 +451,20 @@ class Canva:
         my_canvas.pack(side="left", padx=20,expand = False )
         
         
+        
         #my_canvas.bind('<B1-Motion>', self.move)
 
     def add_box(self,x,y,z):
-        global current_tag, text_rotate, id
-
-        text_rotate = {}
-
+        global current_tag
+        
         #print("Current: ", current_tag)
         self.x = int((int(x)*600)/1200)
         self.y = int((int(y)*500)/1000)
         self.canvas_item_id =my_canvas.create_rectangle( 0, 0, self.x, self.y, outline = "black", fill="gray", activefill = "blue")
         self.text = my_canvas.create_text(self.x/2, self.y/2, text="ID: "+str(current_tag), state="disabled",tags= "tag"+str(self.canvas_item_id))
-        tag = "tag"+str(self.canvas_item_id)
+        tag= "tag"+str(self.canvas_item_id)
         text_rotate[tag] = 0
+        print(text_rotate)
         my_canvas.bind("<Button-1>", self.click_box)
 
         
@@ -543,11 +545,6 @@ class Canva:
             coords = my_canvas.coords(list)
             box_lista.append(coords)
     
-
-
-
 if __name__ == "__main__":
     app = CreateMosaic()
     app.mainloop()
-
-
