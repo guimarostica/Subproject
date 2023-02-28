@@ -106,6 +106,8 @@ class CreateMosaic(tk.Tk):
         
     def delete_box(self, event):
         my_canvas.delete(id)
+        tag = "tag"+str(id[0])
+        del text_rotate[tag]
         
 
 
@@ -145,8 +147,9 @@ class CreateMosaic(tk.Tk):
         print(current_angle)
         if current_angle == -360.0:
             current_angle = 0.0
-        next_ang = current_angle + ang
+        next_ang = current_angle - ang
         # Atualizar a posição do texto
+        text_rotate[tag] = next_ang
         my_canvas.coords(tag, x_center, y_center)
         my_canvas.itemconfigure(tag, angle=current_angle-ang)
 
@@ -231,9 +234,9 @@ class CreateMosaic(tk.Tk):
     def save_button_event(self):
         canva = Canva()
         canva.box_list()
-        
+
         pallet = Pallet()
-        pallet.init(entry_pallet_x.get(), entry_pallet_y.get(), box_lista)
+        pallet.init(entry_pallet_x.get(), entry_pallet_y.get(), box_lista, text_rotate)
  
 
 
@@ -449,12 +452,17 @@ class Canva:
         #my_canvas.bind('<B1-Motion>', self.move)
 
     def add_box(self,x,y,z):
-        global current_tag
+        global current_tag, text_rotate, id
+
+        text_rotate = {}
+
         #print("Current: ", current_tag)
         self.x = int((int(x)*600)/1200)
         self.y = int((int(y)*500)/1000)
         self.canvas_item_id =my_canvas.create_rectangle( 0, 0, self.x, self.y, outline = "black", fill="gray", activefill = "blue")
         self.text = my_canvas.create_text(self.x/2, self.y/2, text="ID: "+str(current_tag), state="disabled",tags= "tag"+str(self.canvas_item_id))
+        tag = "tag"+str(self.canvas_item_id)
+        text_rotate[tag] = 0
         my_canvas.bind("<Button-1>", self.click_box)
 
         
