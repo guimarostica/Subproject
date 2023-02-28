@@ -6,6 +6,7 @@ from tkinter import Canvas
 import math
 from Dat import Dat_File
 from Src import Src_File
+from Pallet_Layout import Pallet
 
 
 class CreateMosaic(tk.Tk):
@@ -42,7 +43,7 @@ class CreateMosaic(tk.Tk):
         #Others
 
         self.name_mosaic_entry = ttk.Entry(top_frame, bootstyle="dark")
-        self.button_save_mosaic = ttk.Button(top_frame, bootstyle="dark", text="Save")
+        self.button_save_mosaic = ttk.Button(top_frame, bootstyle="dark", text="Save", command= self.save_button_event)
         
         self.sub_frame_2.columnconfigure((0,1,2), weight=0)
         self.sub_frame_2.rowconfigure((0,1,2), weight=0)
@@ -81,6 +82,7 @@ class CreateMosaic(tk.Tk):
         self.pallet_info = PalletInfo()
         self.pallet_info.show(self.sub_frame_2)
         self.box_info = BoxInfo()
+        
 
         global var_scale
         var_scale = 10
@@ -224,6 +226,14 @@ class CreateMosaic(tk.Tk):
 
     def clicked_set(self):
        self.var_scale = float(self.scale.get())
+
+
+    def save_button_event(self):
+        canva = Canva()
+        canva.box_list()
+        
+        pallet = Pallet()
+        pallet.init(entry_pallet_x.get(), entry_pallet_y.get(), box_lista)
  
 
 
@@ -515,7 +525,15 @@ class Canva:
         self.root.config(text="Coordinate x:" + str(center_x)+ " y:" + str(center_y))
 
         return center_x, center_y
+    def box_list(self):
+        global box_lista
+        box_lista = []
 
+        lists = my_canvas.find_all()
+
+        for list in lists:
+            coords = my_canvas.coords(list)
+            box_lista.append(coords)
     
 
 
