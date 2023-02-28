@@ -8,11 +8,10 @@ from Dat import Dat_File
 from Src import Src_File
 
 
-
 class CreateMosaic(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.geometry('{}x{}'.format(1050, 600))
+        self.geometry('{}x{}'.format(1100, 600))
    
         #Creating the widgets
 
@@ -22,7 +21,7 @@ class CreateMosaic(tk.Tk):
         aux_frame = ttk.Frame(create_mosaic_frame,bootstyle="info", width=250, height=500)
         
         canva_frame = ttk.Frame(create_mosaic_frame,bootstyle="dark", width=680)
-        top_frame = ttk.Frame(canva_frame,bootstyle="success",width=622,height=50)
+        top_frame = ttk.Frame(self,bootstyle="success",width=622,height=50)
         self.sub_frame_1 = ttk.Frame(create_mosaic_frame,bootstyle="dark", width=100)
         self.sub_frame_2 = ttk.Frame(aux_frame,bootstyle="success", width=250, height=500)
         self.sub_frame_3 = ttk.Frame(aux_frame,bootstyle="success", width=250)
@@ -33,50 +32,38 @@ class CreateMosaic(tk.Tk):
         #Labels
         
         #Buttons
-        self.button_1 = ttk.Button(self.sub_frame_1, text= "Pallet Info", width=10, bootstyle="secondary")
-        self.button_2 = ttk.Button(self.sub_frame_1, text= "Box Info", width=10,bootstyle="secondary")
-        self.button_3 = ttk.Button(self.sub_frame_1, text= "Gripper Info", width=10,bootstyle="secondary")
-        
-
-        #-----------------------Box-----------------------
-        self.Label_2 = ttk.Label(self.sub_frame_2, text="Box Information", font=("Arial", 11,"bold"), bootstyle="inverse-success")
-        # X:
-        self.pre_label_2_x = ttk.Label(self.sub_frame_2, text="X: ", font=("Arial", 8, "bold"), bootstyle="inverse-success", anchor="e")
-        self.pos_label_2_x = ttk.Label(self.sub_frame_2, text="mm", font=("Arial", 8, "bold"), bootstyle="inverse-success")
-        # Y:_
-        self.pre_label_2_y = ttk.Label(self.sub_frame_2, text="Y: ", font=("Arial", 8, "bold"), bootstyle="inverse-success" )
-        self.pos_label_2_y = ttk.Label(self.sub_frame_2, text="mm", font=("Arial", 8, "bold"), bootstyle="inverse-success")
-        # Pallet Height:
-        self.pre_label_2_pallet = ttk.Label(self.sub_frame_2, text="Z: ", font=("Arial", 8, "bold"), bootstyle="inverse-success" )
-        self.pos_label_2_pallet = ttk.Label(self.sub_frame_2, text="mm", font=("Arial", 8, "bold"), bootstyle="inverse-success")
-        # Maximum Height:
-        self.pre_label_2_max = ttk.Label(self.sub_frame_2, text="Box Weight: ", font=("Arial", 8, "bold"), bootstyle="inverse-success" )
-        self.pos_label_2_max = ttk.Label(self.sub_frame_2, text="Kg", font=("Arial", 8, "bold"), bootstyle="inverse-success")
-        #Buttons
         self.button_1 = ttk.Button(self.sub_frame_1, text= "Pallet Info", width=10, bootstyle="secondary", command=self.click_1)
         self.button_2 = ttk.Button(self.sub_frame_1, text= "Box Info", width=10,bootstyle="secondary", command=self.click_2)
         self.button_3 = ttk.Button(self.sub_frame_1, text= "Gripper Info", width=10,bootstyle="secondary", command=self.click_3)
-        self.button_4 = ttk.Button(top_frame, text= "Press", width=10,bootstyle="secondary", command=self.get_poses)
+        #self.button_4 = ttk.Button(top_frame, text= "Press", width=10,bootstyle="secondary", command=self.get_poses)
         self.button_5 = ttk.Button(self.sub_frame_2, text= "Insert", width=10,bootstyle="secondary")
 
         
         #Others
+
+        self.name_mosaic_entry = ttk.Entry(top_frame, bootstyle="dark")
+        self.button_save_mosaic = ttk.Button(top_frame, bootstyle="dark", text="Save")
         
-        self.sub_frame_2.columnconfigure(2, weight=0)
+        self.sub_frame_2.columnconfigure((0,1,2), weight=0)
         self.sub_frame_2.rowconfigure((0,1,2), weight=0)
 
         
         #Packing the widgets
-        
-        create_mosaic_frame.pack(side="left",fill="both", expand=True)
-        self.sub_frame_1.pack(side="left", fill="both", pady=50, padx=(20,0.5))
-        aux_frame.pack(side="left", fill="both", pady=50)
-        top_frame.pack(side="top", anchor="nw", pady=(0,0))
+        top_frame.pack(side="top", anchor="nw",fill="x", expand=False)
+        create_mosaic_frame.pack(side="left", anchor="nw",fill="both", expand=True)
+        self.sub_frame_1.pack(side="left", anchor="nw", fill="x", pady=20, padx=(20,0.5))
+        aux_frame.pack(side="left", anchor="nw", fill="both", pady=20)
+       
         canva_frame.pack(side="left", fill="both")
         self.button_1.pack(fill="x", ipady=30, pady=(0,0.5))
         self.button_2.pack(fill="x", ipady=30, pady=(0,0.5))
         self.button_3.pack(fill="x", ipady=30, pady=(0,0.5))
-        self.button_4.pack()
+        #self.button_4.pack()
+
+        self.name_mosaic_entry.pack(side="right")
+        self.button_save_mosaic.pack(side="right")
+
+        
 
         self.bind("<Left>", self.left)
         self.bind("<Right>", self.right)
@@ -91,10 +78,13 @@ class CreateMosaic(tk.Tk):
         global current_tag
         current_tag = 1
 
-      
         self.pallet_info = PalletInfo()
         self.pallet_info.show(self.sub_frame_2)
         self.box_info = BoxInfo()
+
+        global var_scale
+        var_scale = 10
+
     def click_1(self):
         self.pallet_info.show(self.sub_frame_2)
         self.box_info.hide(self.sub_frame_3)
@@ -115,6 +105,7 @@ class CreateMosaic(tk.Tk):
     def delete_box(self, event):
         my_canvas.delete(id)
         
+
 
     def rotate(self, event):
         angle = 90
@@ -157,9 +148,8 @@ class CreateMosaic(tk.Tk):
         my_canvas.coords(tag, x_center, y_center)
         my_canvas.itemconfigure(tag, angle=current_angle-ang)
 
-
     def left(self, event):
-        x = -10
+        x = - var_scale
         y = 0
         (x1, y1, x2, y2) = my_canvas.coords(id)
         print("mexendo")
@@ -170,10 +160,10 @@ class CreateMosaic(tk.Tk):
             pass
         #self.state_label(id)
 
-
     def right(self, event):
-        x = 10
+        x = var_scale
         y = 0
+        print("Valor: ", x)
         print("self>>>", id)
         (x1, y1, x2, y2) = my_canvas.coords(id)
         print("mexendo")
@@ -187,10 +177,9 @@ class CreateMosaic(tk.Tk):
             pass
         #self.state_label(id)
         
-
     def up(self, event):
         x = 0
-        y = -10
+        y = -var_scale
         (x1, y1, x2, y2) = my_canvas.coords(id)
         if y1 > 0:
             my_canvas.move(id, x,y)
@@ -199,10 +188,9 @@ class CreateMosaic(tk.Tk):
             pass
         #self.state_label(id)
         
-
     def down(self, event):
         x = 0
-        y = 10
+        y = var_scale
         pallet_y = int((int(entry_pallet_y.get())*600)/1200)
         (x1, y1, x2, y2) = my_canvas.coords(id)
         if y2 < pallet_y:
@@ -230,6 +218,12 @@ class CreateMosaic(tk.Tk):
 
 
         dat_file.create_dat_file(n_camadas,n_caixas,h,dic)
+
+    def update_scale(self, num):
+        self.var_scale = num 
+
+    def clicked_set(self):
+       self.var_scale = float(self.scale.get())
  
 
 
@@ -299,6 +293,7 @@ class PalletInfo:
 class BoxInfo:
     def show(self, frame):
         frame.pack(side="left", fill="both")  
+        self.variavel_local = 1
         #-----------------------Pallet-----------------------
         self.Label_1 = ttk.Label(frame, text="Box Information", font=("Arial", 11,"bold"), bootstyle="inverse-success")
         # X:
@@ -318,11 +313,29 @@ class BoxInfo:
         self.entry_box_y = ttk.Entry(frame, bootstyle="default", width=10,font=('Arial', 10) )
         self.entry_box_z = ttk.Entry(frame, bootstyle="default", width=10,font=('Arial', 10) )
         self.entry_box_weight = ttk.Entry(frame, bootstyle="default", width=10,font=('Arial', 10) )
+        self.entry_trans_x = ttk.Entry(frame, bootstyle="default", width=5,font=('Arial', 10) )
+        self.entry_trans_y = ttk.Entry(frame, bootstyle="default", width=5,font=('Arial', 10) )
         #Button
         self.button_5 = ttk.Button(frame, text= "Insert", width=10,bootstyle="secondary", command=self.click_insert)
+        self.button_6 = ttk.Button(frame, text= "Move", width=10,bootstyle="secondary", command=self.click_move)
+
         #Others:
         self.separator_2 = ttk.Separator(frame, bootstyle="dark")
+        self.separator_3 = ttk.Separator(frame, bootstyle="dark")
 
+        self.pre_trans_x = ttk.Label(frame, text="X: ", font=("Arial", 6, "bold"), bootstyle="inverse-success", anchor="e")
+        self.pre_trans_y = ttk.Label(frame, text="Y: ", font=("Arial", 6, "bold"), bootstyle="inverse-success", anchor="e")
+
+        #Scale:
+
+        # Criando um widget Label para mostrar o valor selecionado no Scale
+        self.label_scale = ttk.Label(frame, text="Scale",  bootstyle="inverse-success" )
+
+        # Criando um widget Scale e configurando-o para ajustar valores de 1 em 1
+        self.scale = ttk.Spinbox(frame,  bootstyle="dark", from_= 0, to = 10, width=4)
+        
+        self.button_7 = ttk.Button(frame, text = "Set",bootstyle="secondary", command=self.clicked_set)
+        
         #GRID
         self.Label_1.grid(row=0, column=1, sticky="we",pady=(10,40), padx=(10,20))
         self.separator_2.grid(column=0,columnspan=3, row=0, sticky="we")  
@@ -341,17 +354,70 @@ class BoxInfo:
         self.pos_label_2_weight.grid(row=4, column=2, sticky="w", pady=(0,20)) 
         #---
         self.button_5.grid(row=5, column=1, pady=20)
+        self.separator_3.grid(row=6, column=0, columnspan=3, sticky="we")  
+        #---
+        self.pre_trans_x.grid(row=7, column=0,sticky="w",padx=(10,0) )
+        self.entry_trans_x.grid(row=7, column=0,sticky="e",padx=(0,10),pady=20 )
+
+        self.pre_trans_y.grid(row=7, column=1,sticky="w",padx=(10,0) )
+        self.entry_trans_y.grid(row=7, column=1,pady=20)
+
+        self.button_6.grid(row=7, column=2, sticky="w", padx=(0,10))
+
+        self.label_scale.grid(row=8, column=1 , pady=(20,10))
+        self.scale.grid(row=9, column=1, sticky="w")
+        self.button_7.grid(row=9, column=1, sticky="e")
 
         global entry_box_z
+
 
         entry_box_z = self.entry_box_z
     def hide(self, frame):
         frame.pack_forget()
-    
+
     def click_insert(self):
         pallet = Canva()
         pallet.add_box(self.entry_box_x.get(), self.entry_box_y.get(), self.entry_box_z.get())
+    
+    def click_move(self):
+        self.teletransport(self.entry_trans_x.get(), self.entry_trans_y.get())
+
+    def teletransport(self, x, y):
+        pallet_x = int((int(entry_pallet_x.get())*600)/1200)
+        pallet_y = int((int(entry_pallet_y.get())*600)/1200)
+        x = int((int(x)*600)/1200)
+        y = int((int(y)*600)/1200)
+        if (x > 0 and x < pallet_x) and (y > 0 and y < pallet_y):
+            my_canvas.moveto(id, x,y)
+            self.update_text_position(0)
+
+    def update_text_position(self,ang):
+        print("DANDO UPDATE")
         
+        # Obter as coordenadas atuais do retângulo
+        x1, y1, x2, y2 = my_canvas.coords(id)
+        print("o self id é : ", id)
+        # Calcular a posição central do retângulo
+        x_center = (x1 + x2) / 2
+        y_center = (y1 + y2) / 2
+
+        tag = "tag"+str(id[0])
+        
+        get_current_angle = my_canvas.itemconfig(tag, 'angle')
+        print("ang:::", get_current_angle)
+        current_angle = float(get_current_angle[4])
+        print(current_angle)
+        if current_angle == -360.0:
+            current_angle = 0.0
+        next_ang = current_angle + ang
+        # Atualizar a posição do texto
+        my_canvas.coords(tag, x_center, y_center)
+        my_canvas.itemconfigure(tag, angle=current_angle-ang)
+
+    def clicked_set(self):
+        global var_scale
+        var_scale = self.scale.get()
+
 
 
 class Canva:
