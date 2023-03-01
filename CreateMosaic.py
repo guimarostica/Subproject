@@ -154,7 +154,7 @@ class CreateMosaic(tk.Tk):
         text_rotate[tag] = next_ang
 
     def left(self, event):
-        x = - var_scale
+        x = - int(var_scale)
         y = 0
         (x1, y1, x2, y2) = my_canvas.coords(id)
         print("mexendo")
@@ -184,7 +184,7 @@ class CreateMosaic(tk.Tk):
         
     def up(self, event):
         x = 0
-        y = -var_scale
+        y = -int(var_scale)
         (x1, y1, x2, y2) = my_canvas.coords(id)
         if y1 > 0:
             my_canvas.move(id, x,y)
