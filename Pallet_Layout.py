@@ -30,6 +30,7 @@ class Pallet():
         btn = Button(self.root, text="Press Here!", command=self.add_pallet)
         btn.grid(row=0,column=0, padx=10, pady=10)
 
+
     def separar_pares_impares(self,lista_nomes):
         nomes_pares = []
         nomes_impares = []
