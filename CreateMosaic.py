@@ -44,6 +44,7 @@ class CreateMosaic(tk.Tk):
 
         self.name_mosaic_entry = ttk.Entry(top_frame, bootstyle="dark")
         self.button_save_mosaic = ttk.Button(top_frame, bootstyle="dark", text="Save", command= self.save_button_event)
+        self.button_reset_mosaic = ttk.Button(top_frame, bootstyle="dark", text="Reset", command= self.reset_button_event)
         
         self.sub_frame_2.columnconfigure((0,1,2), weight=0)
         self.sub_frame_2.rowconfigure((0,1,2), weight=0)
@@ -63,6 +64,8 @@ class CreateMosaic(tk.Tk):
 
         self.name_mosaic_entry.pack(side="right")
         self.button_save_mosaic.pack(side="right")
+        self.button_reset_mosaic.pack(side="right")
+
 
         
 
@@ -237,6 +240,11 @@ class CreateMosaic(tk.Tk):
         
         pallet = Pallet()
         pallet.init(entry_pallet_x.get(), entry_pallet_y.get(), box_lista, text_rotate)
+    
+    def reset_button_event(self):
+        canva = Canva()
+        canva.box_list()
+        canva.reset_canva(box_lista)
  
 
 
@@ -544,6 +552,12 @@ class Canva:
         for list in lists:
             coords = my_canvas.coords(list)
             box_lista.append(coords)
+
+    def reset_canva(self, list):
+        lists = my_canvas.find_all()
+        for list in lists:
+            my_canvas.delete(list)
+        
     
 if __name__ == "__main__":
     app = CreateMosaic()
