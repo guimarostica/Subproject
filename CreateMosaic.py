@@ -9,20 +9,16 @@ from Src import Src_File
 from Pallet_Layout import Pallet
 
 
-class CreateMosaic(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.geometry('{}x{}'.format(1100, 600))
-   
-        #Creating the widgets
+class CreateMosaic():
+    def show(self,canva):
 
         #Frames
         global create_mosaic_frame, aux_frame, canva_frame 
-        create_mosaic_frame= ttk.Frame(self,bootstyle="dark",  width=450)
+        create_mosaic_frame= ttk.Frame(canva,bootstyle="dark",  width=450)
         aux_frame = ttk.Frame(create_mosaic_frame,bootstyle="info", width=250, height=500)
         
         canva_frame = ttk.Frame(create_mosaic_frame,bootstyle="dark", width=680)
-        top_frame = ttk.Frame(self,bootstyle="success",width=622,height=50)
+        top_frame = ttk.Frame(canva,bootstyle="success",width=622,height=50)
         self.sub_frame_1 = ttk.Frame(create_mosaic_frame,bootstyle="dark", width=100)
         self.sub_frame_2 = ttk.Frame(aux_frame,bootstyle="success", width=250, height=500)
         self.sub_frame_3 = ttk.Frame(aux_frame,bootstyle="success", width=250)
@@ -65,17 +61,6 @@ class CreateMosaic(tk.Tk):
         self.name_mosaic_entry.pack(side="right")
         self.button_save_mosaic.pack(side="right")
         self.button_reset_mosaic.pack(side="right")
-
-
-        
-
-        self.bind("<Left>", self.left)
-        self.bind("<Right>", self.right)
-        self.bind("<Up>", self.up)
-        self.bind("<Down>", self.down)
-        self.bind("<Delete>", self.delete_box)
-        self.bind("<Button-3>", self.rotate)
-        self.bind("<BackSpace>", self.reset)
 
     
 
@@ -572,6 +557,3 @@ class Canva:
         current_tag = 1
         
     
-if __name__ == "__main__":
-    app = CreateMosaic()
-    app.mainloop()
