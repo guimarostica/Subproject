@@ -23,9 +23,7 @@ class App(tk.Tk):
         #Creating the widgets
 
         #Frames
-        self.create_mosaic_frame = ttk.Frame(self,  width=450)
-        self.sub_frame_1 = ttk.Frame(self.create_mosaic_frame,bootstyle="success", width=525)
-        self.sub_frame_2 = ttk.Frame(self.create_mosaic_frame,bootstyle="warning", width=525)
+        self.create_mosaic_frame = ttk.Frame(self,  width=450,bootstyle="success")
         self.create_layer_frame = ttk.Frame(self, bootstyle="success", width=150)
         self.create_sequence_frame = ttk.Frame(self, bootstyle="warning", width=150)
         self.side_frame = ttk.Frame(self, bootstyle="light", width=150,height=150)
@@ -56,12 +54,7 @@ class App(tk.Tk):
         self.btn1.pack(pady=10, fill="x")
         self.btn2.pack(pady=10, fill="x")
         self.btn3.pack(pady=10, fill="x")
-        self.exp_btn.pack(side="bottom", pady=10)
-        self.sub_frame_1.pack(side="left", fill="y")
-        self.sub_frame_2.pack(side="left", fill="y")
-
-
-        
+        self.exp_btn.pack(side="bottom", pady=10)        
 
         self.tela = CreateMosaic()
 
@@ -72,20 +65,31 @@ class App(tk.Tk):
         self.bind("<Delete>", self.tela.delete_box)
         self.bind("<Button-3>", self.tela.rotate)
         self.bind("<BackSpace>", self.tela.reset)
+        
+        self.tela.show(self.create_mosaic_frame)
 #-----------------------------  Functions   -----------------------------
     def click1(self):
-        self.tela.show(self)
-        # self.create_mosaic_frame.pack(side="left",fill="both", expand=True)
+        self.create_mosaic_frame.pack(side="left",fill="both", expand=True)
+        # self.tela.show(self.create_mosaic_frame)
         self.create_layer_frame.pack_forget()
         self.create_sequence_frame.pack_forget()
+        self.btn1.config(state="disable")
+        self.btn2.config(state="normal")
+        self.btn3.config(state="normal")
     def click2(self):
         self.create_layer_frame.pack(side="left",fill="both", expand=True)
-        self.tela.hide()
+        self.tela.hide(self)
         self.create_sequence_frame.pack_forget()
+        self.btn2.config(state="disable")
+        self.btn1.config(state="normal")
+        self.btn3.config(state="normal")
     def click3(self):
         self.create_sequence_frame.pack(side="left",fill="both", expand=True)
         self.create_layer_frame.pack_forget()
         self.create_mosaic_frame.pack_forget()
+        self.btn3.config(state="disable")
+        self.btn2.config(state="normal")
+        self.btn1.config(state="normal")
 
 if __name__ == "__main__":
     app = App()

@@ -77,6 +77,9 @@ class CreateMosaic():
         global var_scale
         var_scale = 10
 
+    def hide(self, frame):
+        frame.config(state="disable")
+
     def click_1(self):
         self.pallet_info.show(self.sub_frame_2)
         self.box_info.hide(self.sub_frame_3)
