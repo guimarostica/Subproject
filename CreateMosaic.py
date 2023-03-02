@@ -85,7 +85,9 @@ class CreateMosaic(tk.Tk):
         self.pallet_info = PalletInfo()
         self.pallet_info.show(self.sub_frame_2)
         self.box_info = BoxInfo()
-        
+
+        global mosaicos
+        mosaicos = {}
 
         global var_scale
         var_scale = 10
@@ -237,14 +239,23 @@ class CreateMosaic(tk.Tk):
     def save_button_event(self):
         canva = Canva()
         canva.box_list()
+
+        mosaicos[self.name_mosaic_entry.get()] = (box_lista,text_rotate)
+
+        (x,y) = mosaicos[self.name_mosaic_entry.get()]
         
         pallet = Pallet()
-        pallet.init(entry_pallet_x.get(), entry_pallet_y.get(), box_lista, text_rotate)
+        pallet.init(entry_pallet_x.get(), entry_pallet_y.get(),x,y)
+        print(" Mosaico Dic: ", mosaicos)
     
     def reset_button_event(self):
         canva = Canva()
         canva.box_list()
         canva.reset_canva(box_lista)
+        text_rotate.clear()
+
+    def get_mosaico_dic(self):
+        return mosaicos
  
 
 
@@ -554,9 +565,11 @@ class Canva:
             box_lista.append(coords)
 
     def reset_canva(self, list):
+        global current_tag
         lists = my_canvas.find_all()
         for list in lists:
             my_canvas.delete(list)
+        current_tag = 1
         
     
 if __name__ == "__main__":
