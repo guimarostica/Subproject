@@ -7,13 +7,15 @@ import math
 from Dat import Dat_File
 from Src import Src_File
 from Pallet_Layout import Pallet
+from PIL import Image, ImageTk
 
 
 class CreateSequence(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Pallet Automation")
-        #self.iconbitmap('icon_1.ico')       
+        #self.iconbitmap('icon_1.ico')     
+        self.geometry('{}x{}'.format(1100, 600))  
 
         #Frames
         global create_mosaic_frame, aux_frame, canva_frame 
@@ -34,21 +36,17 @@ class CreateSequence(tk.Tk):
         #Buttons
         self.button_1 = ttk.Button(self.sub_frame_1, text= "Gripper \nInfo", width=10, bootstyle="secondary", command=self.click_1)
         self.button_2 = ttk.Button(self.sub_frame_1, text= "Create \nSequence", width=10,bootstyle="secondary", command=self.click_2)
-        #self.button_4 = ttk.Button(top_frame, text= "Press", width=10,bootstyle="secondary", command=self.get_poses)
         self.button_5 = ttk.Button(self.sub_frame_2, text= "Insert", width=10,bootstyle="secondary")
-
+        self.button_6 = ttk.Button(top_frame, text= "Press", width=10,bootstyle="secondary")
         
         #Others
-        
-        self.sub_frame_2.columnconfigure((0,1,2), weight=0)
-        self.sub_frame_2.rowconfigure((0,1,2), weight=0)
-
         
         #Packing the widgets
         top_frame.pack(side="top", anchor="nw",fill="x", expand=False)
         create_mosaic_frame.pack(side="left", anchor="nw",fill="both", expand=True)
         self.sub_frame_1.pack(side="left", anchor="nw", fill="x", pady=20, padx=(20,0.5))
         aux_frame.pack(side="left", anchor="nw", fill="both", pady=20)
+        
        
         canva_frame.pack(side="left", fill="both")
         self.button_1.pack(fill="x", ipady=30, pady=(0,0.5))
@@ -56,7 +54,7 @@ class CreateSequence(tk.Tk):
         
         #self.button_4.pack()
 
-    
+        
 
         global current_tag
         current_tag = 1
@@ -67,78 +65,115 @@ class CreateSequence(tk.Tk):
         global var_scale
         var_scale = 10
 
+        self.gripper_info = GripperInfo(self.sub_frame_2)
+        self.sequence_info = SequenceInfo(self.sub_frame_3)
+        self.gripper_info.show(self.sub_frame_2)
+        # self.button_1.config(state="disable")
+        
+
     def hide(self, frame):
         frame.config(state="disable")
 
     def click_1(self):
-        pass
-      
+        self.gripper_info.show(self.sub_frame_2)
+        self.sequence_info.hide(self.sub_frame_3)
 
     def click_2(self):
-        pass
-        
+        self.sequence_info.show(self.sub_frame_3)
+        self.gripper_info.hide(self.sub_frame_2)
 
     def click_3(self):
-        pass
+        self.gripper_info.hide(self.sub_frame_3)
+        self.sequence_info.hide(self.sub_frame_2)     
 
-class PalletInfo:
-    def show(self, frame):
-        frame.pack(side="left", fill="both", expand=True)        
+class GripperInfo:
+
+    def __init__(self, frame):
+               
         #-----------------------Pallet-----------------------
-        self.Label_1 = ttk.Label(frame, text="Pallet Information", font=("Arial", 11,"bold"), bootstyle="inverse-success")
+        self.Label_1 = ttk.Label(frame, text="Gripper Information", font=("Arial", 11,"bold"), bootstyle="inverse-success")
         # X:
-        self.pre_label_x = ttk.Label(frame, text="X: ", font=("Arial", 8, "bold"), bootstyle="inverse-success", anchor="e")
-        self.pos_label_x = ttk.Label(frame, text="mm", font=("Arial", 8, "bold"), bootstyle="inverse-success")
+        self.pre_combobox= ttk.Label(frame, text="Grasp Type: ", font=("Arial", 8, "bold"), bootstyle="inverse-success", anchor="e")
         # Y:
-        self.pre_label_y = ttk.Label(frame, text="Y: ", font=("Arial", 8, "bold"), bootstyle="inverse-success" )
-        self.pos_label_y = ttk.Label(frame, text="mm", font=("Arial", 8, "bold"), bootstyle="inverse-success")
-        # Pallet Height:
-        self.pre_label_pallet = ttk.Label(frame, text="Pallet\n Height: ", font=("Arial", 8, "bold"), bootstyle="inverse-success" )
-        self.pos_label_pallet = ttk.Label(frame, text="mm", font=("Arial", 8, "bold"), bootstyle="inverse-success")
-        # Maximum Height:
-        self.pre_label_max = ttk.Label(frame, text="Maximum\n Height: ", font=("Arial", 8, "bold"), bootstyle="inverse-success" )
-        self.pos_label_max = ttk.Label(frame, text="mm", font=("Arial", 8, "bold"), bootstyle="inverse-success")
-        #Entry
-        self.entry_pallet_x = ttk.Entry(frame, bootstyle="default", width=10,font=('Arial', 10) )
-        self.entry_pallet_y = ttk.Entry(frame, bootstyle="default", width=10,font=('Arial', 10) )
-        self.entry_pallet_height = ttk.Entry(frame, bootstyle="default", width=10,font=('Arial', 10) )
-        self.entry_pallet_max_height = ttk.Entry(frame, bootstyle="default", width=10,font=('Arial', 10) )
-        #Button
-        self.button_4 = ttk.Button(frame, text= "Insert", width=10,bootstyle="secondary", command=self.click_insert)
+        self.pre_entry = ttk.Label(frame, text="Box Number per Grasp: ", font=("Arial", 8, "bold"), bootstyle="inverse-success" )
+
+        self.button_4 = ttk.Button(frame, text= "Set", width=10,bootstyle="secondary", command=self.click_insert)
         #Others:
         self.separator = ttk.Separator(frame, bootstyle="dark")
 
+        self.sequence_entry = ttk.Entry(frame, bootstyle="dark")
+
+        #Check Button
+        self.combobox = ttk.Combobox(frame, textvariable = "oi" ,values=['Mult Vaccun','Rastelo','Pá'], bootstyle = "dark")
+
         #GRID
-        self.Label_1.grid(row=0, column=1, sticky="we",pady=(10,40), padx=(10,20))
-        self.separator.grid(column=0,columnspan=3, row=0, sticky="we")  
+        self.Label_1.pack(anchor="center", padx=(40),pady=(10,15))
+        self.separator.pack(anchor="center", fill="both")
         #---
-        self.pre_label_x.grid(row=1, column=0,  pady=(0,20), padx=(30,0))
-        self.entry_pallet_x.grid(row=1, column=1, sticky="nsew", pady=(0,20))
-        self.pos_label_x.grid(row=1, column=2, sticky="w", pady=(0,20), padx=(0,50))
-        self.pre_label_y.grid(row=2, column=0,  pady=(0,20), padx=(30,0)) 
-        self.entry_pallet_y.grid(row=2, column=1, sticky="nsew", pady=(0,20))
-        self.pos_label_y.grid(row=2, column=2, sticky="w", pady=(0,20))
-        self.pre_label_pallet.grid(row=3, column=0,  pady=(0,20), padx=(30,0))
-        self.entry_pallet_height.grid(row=3, column=1, sticky="nsew", pady=(0,20))
-        self.pos_label_pallet.grid(row=3, column=2, sticky="w", pady=(0,20))
-        self.pre_label_max.grid(row=4, column=0,  pady=(0,20), padx=(30,0))
-        self.entry_pallet_max_height.grid(row=4, sticky="nsew", column=1, pady=(0,20))
-        self.pos_label_max.grid(row=4, column=2, sticky="w", pady=(0,20)) 
-        #---
-        self.button_4.grid(row=5, column=1, pady=20)
+        self.pre_combobox.pack(pady=(20,5))
+        self.combobox.pack(pady=(0,20))
+        self.pre_entry.pack(pady=(0,5))
+        self.sequence_entry.pack(pady=(0,20))
+       
+        # self.pre_label_y.grid(row=2, column=0,  pady=(0,20), padx=(30,0)) 
+        
+        self.button_4.pack(pady=40)
+    def show(self,frame):
+        frame.pack(side="left", fill="both", expand=True)   
+
+    
     def hide(self, frame):
         frame.pack_forget()
 
     def click_insert(self):
-        global entry_pallet_x, entry_pallet_y, entry_pallet_max_height, entry_pallet_height
+        self.n_boxes = self.sequence_entry.get()
+        self.gasp_type = self.combobox.get()
+        print("n: ", self.n_boxes)
+        print("type: ", self.gasp_type)
 
-        entry_pallet_x = self.entry_pallet_x
-        entry_pallet_y = self.entry_pallet_y
-        entry_pallet_height = self.entry_pallet_height
-        entry_pallet_max_height = self.entry_pallet_max_height
+class SequenceInfo:
+    def __init__(self, frame):
+              
+        #-----------------------Pallet-----------------------
+        self.Label_1 = ttk.Label(frame, text="Gripper Information", font=("Arial", 11,"bold"), bootstyle="inverse-success")
+        # X:
+        self.pre_combobox= ttk.Label(frame, text="Grasp Type: ", font=("Arial", 8, "bold"), bootstyle="inverse-success", anchor="e")
+        # Y:
+        self.pre_entry = ttk.Label(frame, text="Box Number per Grasp: ", font=("Arial", 8, "bold"), bootstyle="inverse-success" )
 
-        pallet = Canva()
-        pallet.add_pallet(self.entry_pallet_x.get(), self.entry_pallet_y.get())
+        self.button_4 = ttk.Button(frame, text= "Set", width=10,bootstyle="secondary", command=self.click_insert)
+        #Others:
+        self.separator = ttk.Separator(frame, bootstyle="dark")
+
+        self.sequence_entry = ttk.Entry(frame, bootstyle="dark")
+
+        #Check Button
+        self.combobox = ttk.Combobox(frame, textvariable = "oi" ,values=['Mult Vaccun','Rastelo','Pá'], bootstyle = "dark")
+
+        #GRID
+        # self.Label_1.pack(anchor="center", padx=(40),pady=(10,15))
+        # self.separator.pack(anchor="center", fill="both")
+        # #---
+        # self.pre_combobox.pack(pady=(20,5))
+        # self.combobox.pack(pady=(0,20))
+        # self.pre_entry.pack(pady=(0,5))
+        # self.sequence_entry.pack(pady=(0,20))
+       
+        # self.pre_label_y.grid(row=2, column=0,  pady=(0,20), padx=(30,0)) 
+        
+        self.button_4.pack(pady=40)
+
+    def show(self, frame):
+        frame.pack(side="left", fill="both", expand=True)  
+
+    def hide(self, frame):
+        frame.pack_forget()
+
+    def click_insert(self):
+        self.n_boxes = self.sequence_entry.get()
+        self.gasp_type = self.combobox.get()
+        print("n: ", self.n_boxes)
+        print("type: ", self.gasp_type)
          
 
 if __name__ == "__main__":
