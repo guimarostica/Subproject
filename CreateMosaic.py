@@ -7,6 +7,7 @@ import math
 from Dat import Dat_File
 from Src import Src_File
 from Pallet_Layout import Pallet
+from Gui import Gui_File
 
 
 class CreateMosaic():
@@ -225,16 +226,20 @@ class CreateMosaic():
 
 
     def save_button_event(self):
+        gui_file = Gui_File()
         canva = Canva()
         canva.box_list()
-
         mosaicos[self.name_mosaic_entry.get()] = (box_lista,text_rotate)
-
         (x,y) = mosaicos[self.name_mosaic_entry.get()]
+        gui_file.create_gui_file(box_lista, text_rotate)
         
         pallet = Pallet()
         pallet.init(entry_pallet_x.get(), entry_pallet_y.get(),x,y)
         print(" Mosaico Dic: ", mosaicos)
+
+    def import_button_event(self):
+        gui_file = Gui_File()
+        gui_file.open_file()
     
     def reset_button_event(self):
         canva = Canva()

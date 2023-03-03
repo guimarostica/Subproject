@@ -32,8 +32,8 @@ class CreateSequence(tk.Tk):
         #Labels
         
         #Buttons
-        self.button_1 = ttk.Button(self.sub_frame_1, text= "Gripper Info", width=10, bootstyle="secondary", command=self.click_1)
-        self.button_2 = ttk.Button(self.sub_frame_1, text= "Create Sequence", width=10,bootstyle="secondary", command=self.click_2)
+        self.button_1 = ttk.Button(self.sub_frame_1, text= "Gripper \nInfo", width=10, bootstyle="secondary", command=self.click_1)
+        self.button_2 = ttk.Button(self.sub_frame_1, text= "Create \nSequence", width=10,bootstyle="secondary", command=self.click_2)
         #self.button_4 = ttk.Button(top_frame, text= "Press", width=10,bootstyle="secondary", command=self.get_poses)
         self.button_5 = ttk.Button(self.sub_frame_2, text= "Insert", width=10,bootstyle="secondary")
 
