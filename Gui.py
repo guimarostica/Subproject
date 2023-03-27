@@ -12,6 +12,7 @@ class Gui_File:
         # Lê o conteúdo do arquivo
         with open(caminho_arquivo, "r") as arquivo:
             conteudo = arquivo.read()
+            conteudo = conteudo.split()
         return conteudo
 
     def create_gui_file(self,box_position, box_orientation):

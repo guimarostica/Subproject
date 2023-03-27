@@ -36,6 +36,8 @@ class CreateSequence(tk.Tk):
         #Buttons
         self.button_1 = ttk.Button(self.sub_frame_1, text= "Gripper \nInfo", width=10, bootstyle="secondary", command=self.click_1)
         self.button_2 = ttk.Button(self.sub_frame_1, text= "Create \nSequence", width=10,bootstyle="secondary", command=self.click_2)
+        self.button_3 = ttk.Button(self.sub_frame_1, text= "General", width=10,bootstyle="secondary", command=self.click_3)
+
         self.button_5 = ttk.Button(self.sub_frame_2, text= "Insert", width=10,bootstyle="secondary")
         self.button_6 = ttk.Button(top_frame, text= "Press", width=10,bootstyle="secondary")
         
@@ -51,6 +53,7 @@ class CreateSequence(tk.Tk):
         canva_frame.pack(side="left", fill="both")
         self.button_1.pack(fill="x", ipady=30, pady=(0,0.5))
         self.button_2.pack(fill="x", ipady=30, pady=(0,0.5))
+        self.button_3.pack(fill="x", ipady=30, pady=(0,0.5))
         
         #self.button_4.pack()
 
@@ -67,6 +70,7 @@ class CreateSequence(tk.Tk):
 
         self.gripper_info = GripperInfo(self.sub_frame_2)
         self.sequence_info = SequenceInfo(self.sub_frame_3)
+        self.general = General(self.sub_frame_4)
         self.gripper_info.show(self.sub_frame_2)
         # self.button_1.config(state="disable")
         
@@ -77,14 +81,17 @@ class CreateSequence(tk.Tk):
     def click_1(self):
         self.gripper_info.show(self.sub_frame_2)
         self.sequence_info.hide(self.sub_frame_3)
+        self.general.hide(self.sub_frame_4) 
 
     def click_2(self):
         self.sequence_info.show(self.sub_frame_3)
         self.gripper_info.hide(self.sub_frame_2)
+        self.general.hide(self.sub_frame_4) 
 
     def click_3(self):
         self.gripper_info.hide(self.sub_frame_3)
-        self.sequence_info.hide(self.sub_frame_2)     
+        self.sequence_info.hide(self.sub_frame_2)
+        self.general.show(self.sub_frame_4)      
 
 class GripperInfo:
 
@@ -150,17 +157,14 @@ class SequenceInfo:
         #Check Button
         self.combobox = ttk.Combobox(frame, textvariable = "oi" ,values=['Mult Vaccun','Rastelo','Pá'], bootstyle = "dark")
 
-        #GRID
-        # self.Label_1.pack(anchor="center", padx=(40),pady=(10,15))
-        # self.separator.pack(anchor="center", fill="both")
-        # #---
-        # self.pre_combobox.pack(pady=(20,5))
-        # self.combobox.pack(pady=(0,20))
-        # self.pre_entry.pack(pady=(0,5))
-        # self.sequence_entry.pack(pady=(0,20))
-       
-        # self.pre_label_y.grid(row=2, column=0,  pady=(0,20), padx=(30,0)) 
-        
+        self.tree = ttk.Treeview(frame, bootstyle = "success" )
+
+        frame = self.tree.insert('', 'end', text='Mosaico')
+        self.tree.insert(frame, 'end', text='Nome 1')
+        self.tree.insert(frame, 'end', text='Nome 2')
+        self.tree.insert(frame, 'end', text='Nome 3')
+    
+        self.tree.pack()
         self.button_4.pack(pady=40)
 
     def show(self, frame):
@@ -175,7 +179,34 @@ class SequenceInfo:
         print("n: ", self.n_boxes)
         print("type: ", self.gasp_type)
          
+class General:
+    def __init__(self, frame):
+              
+        self.tree = ttk.Treeview(frame, bootstyle = "success" )
 
+        frame = self.tree.insert('', 'end', text='Mosaico')
+        frame2 = self.tree.insert('', 'end', text='Sequencia')
+        self.tree.insert(frame, 'end', text='Nome 1')
+        self.tree.insert(frame, 'end', text='Nome 2')
+        self.tree.insert(frame, 'end', text='Nome 3')
+        self.tree.insert(frame2, 'end', text='Nome 1')
+        self.tree.insert(frame2, 'end', text='Nome 2')
+        self.tree.insert(frame2, 'end', text='Nome 3')
+
+        self.tree.pack()
+
+    def show(self, frame):
+        frame.pack(side="left", fill="both", expand=True)  
+
+    def hide(self, frame):
+        frame.pack_forget()
+
+    def click_insert(self):
+        self.n_boxes = self.sequence_entry.get()
+        self.gasp_type = self.combobox.get()
+        print("n: ", self.n_boxes)
+        print("type: ", self.gasp_type)
+         
 if __name__ == "__main__":
     app = CreateSequence()
     app.mainloop()
